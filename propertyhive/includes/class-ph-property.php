@@ -93,13 +93,9 @@ class PH_Property {
 
         $value = '';
 
-        if ( method_exists($this, 'get_' . $key) ) 
+        if ( method_exists($this, 'get_' . $key) && 'available_date' != $key ) 
         {
             $value = $this->{'get_' . $key}();
-        }
-        elseif ( 'marketing_flag' == $key ) 
-        {
-            $value = $this->get_marketing_flag();
         }
         else
         {
@@ -1300,7 +1296,7 @@ class PH_Property {
                 }
                 else
                 {
-                    $function_name = "get_restriction_type";
+                    $function_name = "get_restriction";
 
                     if ( function_exists($function_name) )
                     {
