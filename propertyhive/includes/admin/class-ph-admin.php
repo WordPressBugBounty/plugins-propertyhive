@@ -119,7 +119,7 @@ class PH_Admin {
 
     public function check_hide_demo_data_tab()
     {
-        if ( isset($_GET['tab']) && $_GET['tab'] == 'demodata' && isset($_GET['hidetab']) )
+        if ( isset($_GET['tab']) && $_GET['tab'] == 'demo_data' && isset($_GET['hidetab']) )
         {
             update_option( 'propertyhive_hide_demo_data_tab', 'yes' );
             wp_redirect( admin_url('admin.php?page=ph-settings') );
@@ -563,6 +563,12 @@ class PH_Admin {
         if ( ! is_ajax() ) {
             include( 'class-ph-admin-menus.php' );
             include( 'class-ph-admin-assets.php' );
+
+            // Help Tab
+            if ( apply_filters( 'propertyhive_enable_admin_help_tab', true ) ) 
+            {
+                include_once( 'class-ph-admin-help.php' );
+            }
         }
     }
 
@@ -659,7 +665,7 @@ class PH_Admin {
                             " . __( '<strong>New To Property Hive?</strong> Did you know that you can quickly import demo data to get a feel for how Property Hive works?', 'propertyhive' ) . "
                         </p>
                         <p>
-                            <a href=\"". admin_url('admin.php?page=ph-settings&tab=demodata') . "\" class=\"button-primary\">Import Demo Data</a>
+                            <a href=\"". admin_url('admin.php?page=ph-settings&tab=demo_data') . "\" class=\"button-primary\">Import Demo Data</a>
                             <a href=\"\" class=\"button\" id=\"ph_dismiss_notice_demo_data\">Dismiss</a>
                         </p>
                         
@@ -706,11 +712,11 @@ class PH_Admin {
             {
                 echo "<div class=\"notice notice-info\" id=\"ph_notice_missing_google_maps_api_key\">
                         <p>
-                            " . __( 'We noticed that you haven\'t entered a Google Maps API key yet. If wishing to display a map on your website it\'s recommended that you <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">create one</a> and <a href="'. admin_url('admin.php?page=ph-settings&tab=general&section=map') . '">enter it</a>.', 'propertyhive' ) . "
+                            " . sprintf( __( 'We noticed that you haven\'t entered a Google Maps API key yet. If wishing to display a map on your website it\'s recommended that you <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">create one</a> and <a href="%s">enter it</a>.', 'propertyhive' ), admin_url('admin.php?page=ph-settings&tab=general&section=map') ) . "
                         </p>
                         <p>
-                            <a href=\"". admin_url('admin.php?page=ph-settings&tab=general&section=map') . "\" class=\"button-primary\">Enter Google Maps API Key</a>
-                            <a href=\"\" class=\"button\" id=\"ph_dismiss_notice_missing_google_maps_api_key\">Dismiss</a>
+                            <a href=\"". admin_url('admin.php?page=ph-settings&tab=general&section=map') . "\" class=\"button-primary\">" . __( 'Enter Google Maps API Key', 'propertyhive' ) . "</a>
+                            <a href=\"\" class=\"button\" id=\"ph_dismiss_notice_missing_google_maps_api_key\">" . __( 'Dismiss', 'propertyhive' ) . "</a>
                         </p>
                         
                     </div>";
@@ -747,8 +753,8 @@ class PH_Admin {
                             " . $output . "
                         </p>
                         <p>
-                            <a href=\"". admin_url('admin.php?page=ph-settings&tab=licensekey') . "\" class=\"button-primary\">Go To License Key Settings</a>
-                            <a href=\"\" class=\"button\" id=\"ph_dismiss_notice_invalid_expired_license_key\">Dismiss</a>
+                            <a href=\"". admin_url('admin.php?page=ph-settings&tab=licensekey') . "\" class=\"button-primary\">" . __( 'Go To License Key Settings', 'propertyhive' ) . "</a>
+                            <a href=\"\" class=\"button\" id=\"ph_dismiss_notice_invalid_expired_license_key\">" . __( 'Dismiss', 'propertyhive' ) . "</a>
                         </p>
                         
                     </div>";
@@ -768,8 +774,8 @@ class PH_Admin {
                             <p>' . __( 'The Property Hive email queue does not appear to be running', 'propertyhive' ) . '
                             </p>
                             <p>
-                                <a href="'. admin_url('admin.php?page=ph-settings&tab=email&section=log&status=queued') . '" class="button-primary">Go To Email Queue</a>
-                                <!--<a href="" class="button" id="ph_dismiss_notice_email_cron_not_running">Dismiss</a>-->
+                                <a href="'. admin_url('admin.php?page=ph-settings&tab=email&section=log&status=queued') . '" class="button-primary">' . __( 'Go To Email Queue', 'propertyhive' ) . '</a>
+                                <!--<a href="" class="button" id="ph_dismiss_notice_email_cron_not_running">' . __( 'Dismiss', 'propertyhive' ) . '</a>-->
                             </p>
                         </div>
                     ';

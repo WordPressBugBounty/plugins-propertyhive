@@ -77,8 +77,160 @@ class PH_Admin_CPT_Property extends PH_Admin_CPT {
 		// Download permissions
 		//add_action( 'propertyhive_process_product_file_download_paths', array( $this, 'process_product_file_download_paths' ), 10, 3 );*/
 
+		add_action( 'load-edit.php', array( $this, 'render_blank' ) );
+
 		// Call PH_Admin_CPT constructor
 		parent::__construct();
+	}
+
+	public function render_blank()
+	{
+		// Check if we are on the 'property' post type listing page
+	    $screen = get_current_screen();
+	    if ($screen->post_type !== 'property') {
+	        return;
+	    }
+
+	    // Check if there are any properties
+	    $query = new WP_Query([
+	        'post_type'      => 'property',
+	        'post_status'    => 'any',
+	        'posts_per_page' => 1
+	    ]);
+
+	    if ($query->have_posts()) {
+	        return; // Let the default table load
+	    }
+
+	    // No properties found, replace the table with a custom splash screen
+	    add_filter('views_edit-property', function ($views) {
+	        // Clear default view filters (All, Published, etc.)
+	        return [];
+	    });
+
+	    add_action('manage_posts_extra_tablenav', function ($which) {
+	    	if ( $which == 'bottom' )
+	    	{
+	    		return;
+	    	}
+	        echo '
+	        <div style="padding: 50px; text-align: center;">
+
+	        	<img style="max-width:400px; margin-bottom:45px;" src="' . PH()->plugin_url() . '/assets/images/no-properties.png" alt="' . esc_attr( __( 'Your property journey begins here!', 'propertyhive' ) ) . '">
+
+	            <h2 style="font-size:1.8em; color:#444; margin:0 0 1.5em">' . esc_html( __( 'Your property journey begins here!', 'propertyhive' ) ) . '</h2>
+	            <a href="' . admin_url('post-new.php?post_type=property&tutorial=yes') . '" class="button button-primary button-hero" style="font-size:1.2em; padding:0 24px;">
+	                ' . esc_html( __( 'Add Your First Property', 'propertyhive' ) ) . '
+	            </a>&nbsp;
+	            <a href="' . admin_url('admin.php?page=ph-settings&tab=demo_data') . '" class="button button-hero" style="font-size:1.2em; padding:0 24px;">
+	                ' . esc_html( __( 'Create Demo Data', 'propertyhive' ) ) . '
+	            </a>&nbsp; ';
+
+	            if ( apply_filters( 'propertyhive_no_properties_property_import_button', true ) === true )
+	            {
+		            $button_to_output = false;
+
+		            if ( class_exists('PH_Property_Import') )
+					{
+						// Already activated. Check can be used
+						if ( apply_filters( 'propertyhive_add_on_can_be_used', true, 'propertyhive-property-import' ) === true )
+			        	{
+			        		$button_to_output = 'normal';
+						}
+					}
+
+					if ( !$button_to_output )
+					{
+						$license_type = get_option( 'propertyhive_license_type', '' );
+						
+						switch ( $license_type )
+						{
+							case "": { $button_to_output = 'dummy'; break; }
+							case "pro": 
+							{
+								if ( PH()->license->is_valid_pro_license_key() )
+								{
+									// It should never get this far if import add on already activated, that's why show activate page
+									$button_to_output = 'activate'; 
+								}
+								else
+								{
+									$button_to_output = 'dummy'; 
+								}
+								break; 
+							}
+						}
+					}
+
+					// only show dummy button to administrators
+					if ( $button_to_output == 'dummy' || $button_to_output == 'activate' )
+					{
+						if ( !current_user_can( 'manage_options' ) ) 
+						{  
+							// not an admin
+							$button_to_output = false;
+						}
+					}
+
+					// only show dummy button to people with it installed eyond 1st nov 2023 (when PRO was introduced)
+					if ( $button_to_output == 'dummy' )
+					{
+						$propertyhive_install_timestamp = get_option( 'propertyhive_install_timestamp', '' );
+					    if ( !empty($propertyhive_install_timestamp) )
+					    {
+					    	$november_first_2023 = strtotime('2023-11-01 00:00:00');
+					    	if ( $propertyhive_install_timestamp < $november_first_2023 )
+					    	{
+					    		$button_to_output = false;
+					    	}
+					    }
+					}
+
+					switch ( $button_to_output )
+					{
+						case "normal":
+						{
+							echo '<a href="' . admin_url('admin.php?page=propertyhive_import_properties') . '" class="button button-hero" style="font-size:1.2em; padding:0 24px;">
+				                ' . esc_html( __( 'Automatically Import Properties', 'propertyhive' ) ) . '
+				            </a>';
+							break;
+						}
+						case "dummy":
+						{
+							echo '<a href="' . admin_url('admin.php?page=ph-import-properties-dummy') . '" class="button button-hero" style="font-size:1.2em; padding:0 24px;">
+				                ' . esc_html( __( 'Automatically Import Properties', 'propertyhive' ) ) . ' <span style="color:#FFF; font-size:10px; font-weight:500; border-radius:12px; padding:2px 8px; letter-spacing:1px; background:#00a32a;">PRO</span>
+				            </a>';
+							break;
+						}
+						case "activate":
+						{
+							echo '<a href="' . admin_url('admin.php?page=ph-settings&tab=features&profilter=import') . '" class="button button-hero" style="font-size:1.2em; padding:0 24px;">
+				                ' . esc_html( __( 'Activate Property Imports', 'propertyhive' ) ) . '
+				            </a>';
+							break;
+						}
+					}
+	            }
+
+	        echo '</div>';
+	    }, 99);
+
+	    // Remove the filters
+	    remove_all_actions('restrict_manage_posts');
+
+	    // Hide the search box
+	    add_action('admin_head', function () {
+	        echo '<style>
+	        	.page-title-action,
+	        	.wrap .wp-list-table,
+	            .search-box { display: none !important; }
+	        </style>';
+	    });
+
+	    add_filter('bulk_actions-edit-property', function ($bulk_actions) {
+		    // Clear all bulk actions
+		    return [];
+		});
 	}
 
 	/**
@@ -291,6 +443,8 @@ class PH_Admin_CPT_Property extends PH_Admin_CPT {
 					{
 						$details[] = '<span style="opacity:0.6">' . __( 'Ref', 'propertyhive' ) . ': ' . $the_property->reference_number . '</span>';
 					}
+
+					$details = apply_filters( 'propertyhive_admin_property_column_address_details', $details, $post->ID );
 
 					echo implode("<br>", $details);
 				}

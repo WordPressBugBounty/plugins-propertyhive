@@ -58,6 +58,17 @@ class PH_Admin_Assets {
             }
         }
 
+        if ( in_array( $screen->id, array( 'property' ) ) )
+        {
+            if ( isset($_GET['tutorial']) && sanitize_text_field($_GET['tutorial']) == 'yes' )
+            {
+                wp_register_style( 'tour-css', PH()->plugin_url() .  '/assets/css/tours/style.css', array(), '1.0.1' );
+                wp_register_style( 'driver-css', PH()->plugin_url() . '/assets/css/tours/driver-js.css', array(), '1.0.1' );
+                wp_enqueue_style( 'tour-css' );
+                wp_enqueue_style( 'driver-css' );
+            }
+        }
+
 	    if ( in_array( $screen->id, array( 'edit-contact', 'edit-enquiry', 'edit-appraisal', 'edit-viewing', 'edit-offer', 'edit-sale' ) ) )
 	    {
 		    wp_enqueue_style( 'daterangepicker.css', '//cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css' );
@@ -79,6 +90,17 @@ class PH_Admin_Assets {
         /*if ( in_array( $screen->id, array( 'dashboard' ) ) ) {
             wp_enqueue_style( 'propertyhive_admin_dashboard_styles', PH()->plugin_url() . '/assets/css/dashboard.css', array(), PH_VERSION );
         }*/
+
+        if ( $screen->id === 'plugins' ) 
+        {
+            // Enqueue the CSS file
+            wp_enqueue_style(
+                'propertyhive_deactivate_survey',
+                PH()->plugin_url() . '/assets/css/deactivate-survey.css',
+                array(),
+                '1.0.0'
+            );
+        }
 
         do_action( 'propertyhive_admin_css' );
     }
@@ -212,6 +234,71 @@ class PH_Admin_Assets {
                 require( ABSPATH . WPINC . '/class-wp-editor.php' );
             }
             add_action( 'admin_print_footer_scripts', array( '_WP_Editors', 'print_default_editor_scripts' ) );
+
+            if ( isset($_GET['tutorial']) && sanitize_text_field($_GET['tutorial']) == 'yes' )
+            {
+                wp_enqueue_script( 'driver-js', PH()->plugin_url() . '/assets/js/tours/driver-js.js', array(), '1.0.1' );
+                wp_register_script( 'tour', PH()->plugin_url() . '/assets/js/tours/tour.js', array( 'driver-js' ), '1.0.1' );
+                wp_enqueue_script( 'tour' );
+
+                $tours = [
+                    'add-property' => [
+                        [
+                            'element' => '#title',
+                            'popover' => [
+                                'title' => __( 'Enter the Property\'s Display Address', 'propertyhive' ),
+                                'description' => __( 'This is the title or address that will be shown publicly. Make it clear and appealing for your audience.', 'propertyhive' ),
+                                'side' => 'bottom',
+                            ],
+                        ],
+                        [
+                            'element' => '#propertyhive_metabox_tabs',
+                            'popover' => [
+                                'title' => __( 'Explore the Property Record', 'propertyhive' ),
+                                'description' => __( 'The property record is organized into sections for easy navigation. Use these tabs to switch between sections.<br><br>Go ahead, try clicking them now.', 'propertyhive' ),
+                                'side' => 'bottom',
+                                'onPrevClick' => 'revert_to_first_tab',
+                                'onNextClick' => 'revert_to_first_tab',
+                            ],
+                        ],
+                        [
+                            'element' => '#propertyhive-property-address',
+                            'popover' => [
+                                'title' => __( 'Enter the Property Details', 'propertyhive' ),
+                                'description' => __( 'Use these fields to input essential property information like address, price, bedrooms, and more. You can also upload images to showcase the property.', 'propertyhive' ),
+                                'side' => 'top',
+                                'onNextClick' => 'revert_to_third_tab',
+                            ],
+                        ],
+                        [
+                            'element' => '#\\_on_market',
+                            'popover' => [
+                                'title' => __( 'Put it on the Market', 'propertyhive' ),
+                                'description' => __( 'For a property to show on your website it will need to be set to \'On Market\' under the \'Marketing\' tab.', 'propertyhive' ),
+                                'side' => 'top',
+                                'onPrevClick' => 'revert_to_first_tab',
+                                'onNextClick' => 'revert_to_first_tab',
+                            ],
+                        ],
+                        [
+                            'element' => '#submitdiv',
+                            'popover' => [
+                                'title' => __( 'Publish your Property', 'propertyhive' ),
+                                'description' => __( 'When you\'re done and are ready to save your changes, simply click \'Publish\'', 'propertyhive' ),
+                                'side' => 'left',
+                                'onPrevClick' => 'revert_to_third_tab',
+                            ],
+                        ],
+                    ],
+                ];
+                wp_localize_script(
+                    'tour',
+                    'tour_plugin',
+                    array(
+                        'tours'    => $tours,
+                    )
+                );
+            }
         }
 
         if ( in_array( $screen->id, ph_get_screen_ids() ) ) 
@@ -315,6 +402,41 @@ class PH_Admin_Assets {
             wp_enqueue_script( 'flot-time' );
             //wp_enqueue_script( 'flot-pie' );
             //wp_enqueue_script( 'flot-stack' );
+        }
+
+        if ( $screen->id === 'plugins' ) 
+        {
+            // Enqueue the JavaScript file
+            wp_enqueue_script(
+                'propertyhive_deactivate_survey',
+                PH()->plugin_url() . '/assets/js/deactivate-survey.js',
+                array('jquery'), // Depend on jQuery
+                '1.0.0',
+                true // Load in footer
+            );
+
+            wp_localize_script('propertyhive_deactivate_survey', 'deactivation_survey', array(
+                'nonce'            => wp_create_nonce('deactivate-survey'),
+
+                'modalTitle'      => __('If you have a moment, please let us know why you are deactivating:', 'propertyhive'),
+                'modalHeader'     => __('Quick Feedback', 'propertyhive'),
+                'skipDeactivate'  => __('Skip & Deactivate', 'propertyhive'),
+                'cancel'          => __('Cancel', 'propertyhive'),
+                'deactivate'      => __('Submit & Deactivate', 'propertyhive'),
+
+                'brokeSite'       => __('The plugin broke my site', 'propertyhive'),
+                'confusing'       => __('The plugin is confusing', 'propertyhive'),
+                'notNeeded'       => __('I no longer need the plugin', 'propertyhive'),
+                'betterPlugin'    => __('I found a better plugin', 'propertyhive'),
+                'temporary'       => __('It\'s a temporary deactivation', 'propertyhive'),
+                'other'           => __('Other', 'propertyhive'),
+
+                'brokeSiteLabel' => __('Oh no! Can you tell us more? (optional)', 'propertyhive'),
+                'betterPluginLabel' => __('What\'s the plugin\'s name? (optional)', 'propertyhive'),
+                'otherLabel'      => __('Additional feedback or comments: (optional)', 'propertyhive'),
+
+                'anonymous'       => __('Anonymous feedback', 'propertyhive'),
+            ));
         }
     }
 
