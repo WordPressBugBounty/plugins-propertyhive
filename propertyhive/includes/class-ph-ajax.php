@@ -354,29 +354,47 @@ class PH_AJAX {
         else
         {
             $response = json_decode($response['body'], TRUE);
+
             if ( $response === FALSE )
             {
-                $errors[] = 'Error decoding response from reCAPTCHA check';
+                $errors[] = __( 'Error decoding response from reCAPTCHA check', 'propertyhive' );
             }
             else
             {
-                if (
-                    isset($response['success']) && $response['success'] == true
-                    &&
-                    (
-                        // If we're using Recaptcha V3, check the score
-                        // 1.0 is very likely a good interaction, 0.0 is very likely a bot
-                        $key == 'recaptcha'
-                        ||
-                        ( isset($response['score']) && $response['score'] >= 0.5 )
-                    )
-                )
+                if ( isset($response['success']) && $response['success'] == true )
                 {
+                    if ( $key == 'recaptcha' )
+                    {
+                        
+                    }
+                    elseif ( $key == 'recaptcha-v3' )
+                    {
+                        $score_threshold = round((float)get_option('propertyhive_captcha_score_threshold', 0.5), 1);
+                        if ( !is_numeric($score_threshold) || $score_threshold < 0 || $score_threshold > 1 )
+                        {
+                            $score_threshold = 0.5;
+                        }
+                        if ( isset($response['score']) && $response['score'] >= $score_threshold )
+                        {
 
+                        }
+                        else
+                        {
+                            $errors[] = __('Failed reCAPTCHA validation due to high spam score', 'propertyhive' ) . ': ' . $response['score'];
+                        }
+                    }
                 }
                 else
                 {
-                    $errors[] = 'Failed reCAPTCHA validation';
+                    $error_message = __( 'Failed reCAPTCHA validation', 'propertyhive' );
+
+                    // Check if Google returned error codes
+                    if ( isset($response['error-codes']) && is_array($response['error-codes']) ) 
+                    {
+                        $error_message .= ' (' . implode(', ', $response['error-codes']) . ')';
+                    }
+
+                    $errors[] = $error_message;
                 }
             }
         }
@@ -2120,7 +2138,7 @@ class PH_AJAX {
                     $response = json_decode($response['body'], TRUE);
                     if ( $response === FALSE )
                     {
-                        $errors[] = 'Error decoding response from hCaptcha check';
+                        $errors[] = __( 'Error decoding response from hCaptcha check', 'propertyhive' );
                     }
                     else
                     {
@@ -2130,7 +2148,7 @@ class PH_AJAX {
                         }
                         else
                         {
-                            $errors[] = 'Failed hCaptcha validation';
+                            $errors[] = __( 'Failed hCaptcha validation', 'propertyhive' );
                         }
                     }
                 }
@@ -2250,7 +2268,7 @@ class PH_AJAX {
 
             foreach ($form_controls as $key => $control)
             {
-                if ( isset($control['type']) && $control['type'] == 'html' ) { continue; }
+                if ( isset($control['type']) && in_array($control['type'], array('html', 'recaptcha', 'recaptcha-v3', 'hCaptcha')) ) { continue; }
 
                 $label = ( isset($control['label']) ) ? $control['label'] : $key;
                 $label = ( isset($control['email_label']) ) ? $control['email_label'] : $label;
