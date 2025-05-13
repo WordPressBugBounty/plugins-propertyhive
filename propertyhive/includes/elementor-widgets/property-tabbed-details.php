@@ -42,12 +42,12 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'type',
 			[
-				'label' => __( 'Type', 'elementor' ),
+				'label' => __( 'Type', 'propertyhive' ),
 				'type' => \Elementor\Controls_Manager::SELECT,
 				'default' => 'horizontal',
 				'options' => [
-					'horizontal' => __( 'Horizontal', 'elementor' ),
-					'vertical' => __( 'Vertical', 'elementor' ),
+					'horizontal' => __( 'Horizontal', 'propertyhive' ),
+					'vertical' => __( 'Vertical', 'propertyhive' ),
 				],
 				'prefix_class' => 'elementor-widget-tabs elementor-tabs-view-',
 			]
@@ -95,15 +95,15 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 				'fields' => [
 					[
 						'name' => 'tab_title',
-						'label' => __( 'Title', 'elementor' ),
+						'label' => __( 'Title', 'propertyhive' ),
 						'type' => \Elementor\Controls_Manager::TEXT,
-						'default' => __( 'Tab Title', 'elementor' ),
-						'placeholder' => __( 'Tab Title', 'elementor' ),
+						'default' => __( 'Tab Title', 'propertyhive' ),
+						'placeholder' => __( 'Tab Title', 'propertyhive' ),
 						'label_block' => true,
 					],
 					[
 						'name' => 'tab_display',
-						'label' => __( 'Display', 'elementor' ),
+						'label' => __( 'Display', 'propertyhive' ),
 						'type' => \Elementor\Controls_Manager::SELECT2,
 						'multiple' => true,
 						'default' => array(),
@@ -133,7 +133,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 		$this->start_controls_section(
 			'section_tabs_style',
 			[
-				'label' => __( 'Tabs', 'elementor' ),
+				'label' => __( 'Tabs', 'propertyhive' ),
 				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -141,7 +141,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'navigation_width',
 			[
-				'label' => __( 'Navigation Width', 'elementor' ),
+				'label' => __( 'Navigation Width', 'propertyhive' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
 				'default' => [
 					'unit' => '%',
@@ -164,7 +164,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'border_width',
 			[
-				'label' => __( 'Border Width', 'elementor' ),
+				'label' => __( 'Border Width', 'propertyhive' ),
 				'type' => \Elementor\Controls_Manager::SLIDER,
 				'default' => [
 					'size' => 1,
@@ -184,7 +184,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'border_color',
 			[
-				'label' => __( 'Border Color', 'elementor' ),
+				'label' => __( 'Border Color', 'propertyhive' ),
 				'type' => \Elementor\Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .elementor-tab-mobile-title, {{WRAPPER}} .elementor-tab-desktop-title.elementor-active, {{WRAPPER}} .elementor-tab-title:before, {{WRAPPER}} .elementor-tab-title:after, {{WRAPPER}} .elementor-tab-content, {{WRAPPER}} .elementor-tabs-content-wrapper' => 'border-color: {{VALUE}};',
@@ -195,7 +195,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'background_color',
 			[
-				'label' => __( 'Background Color', 'elementor' ),
+				'label' => __( 'Background Color', 'propertyhive' ),
 				'type' => \Elementor\Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .elementor-tab-desktop-title.elementor-active' => 'background-color: {{VALUE}};',
@@ -207,7 +207,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'heading_title',
 			[
-				'label' => __( 'Title', 'elementor' ),
+				'label' => __( 'Title', 'propertyhive' ),
 				'type' => \Elementor\Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -216,7 +216,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'tab_color',
 			[
-				'label' => __( 'Color', 'elementor' ),
+				'label' => __( 'Color', 'propertyhive' ),
 				'type' => \Elementor\Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .elementor-tab-title' => 'color: {{VALUE}};',
@@ -230,7 +230,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'tab_active_color',
 			[
-				'label' => __( 'Active Color', 'elementor' ),
+				'label' => __( 'Active Color', 'propertyhive' ),
 				'type' => \Elementor\Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .elementor-tab-title.elementor-active' => 'color: {{VALUE}};',
@@ -255,7 +255,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'heading_content',
 			[
-				'label' => __( 'Content', 'elementor' ),
+				'label' => __( 'Content', 'propertyhive' ),
 				'type' => \Elementor\Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
@@ -264,7 +264,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'content_color',
 			[
-				'label' => __( 'Color', 'elementor' ),
+				'label' => __( 'Color', 'propertyhive' ),
 				'type' => \Elementor\Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .elementor-tab-content' => 'color: {{VALUE}};',
@@ -507,6 +507,21 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 
 								$tab_title_mobile_setting_key = $this->get_repeater_setting_key( 'tab_title_mobile', 'tabs', $tab_count );
 
+								$onclick = '';
+								if ( in_array('map', $item['tab_display']) )
+								{
+									$onclick .= 'setTimeout(function() { initialize_property_map(); }, 10);';
+								}
+								if ( in_array('street_view', $item['tab_display']) )
+								{
+									$onclick .= 'setTimeout(function() { initialize_property_street_view(); }, 10);';
+								}
+								if ( in_array('gallery', $item['tab_display']) )
+								{
+									$onclick .= 'setTimeout(function() { jQuery(window).trigger(\'resize\'); }, 10);';
+								}
+								$onclick = apply_filters( 'propertyhive_elementor_tabbed_details_tab_onclick', $onclick, $property, $item );
+
 								$this->add_render_attribute( $tab_content_setting_key, [
 									'id' => 'elementor-tab-content-' . $id_int . $tab_count,
 									'class' => [ 'elementor-tab-content', 'elementor-clearfix' ],
@@ -520,11 +535,12 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 									'tabindex' => $id_int . $tab_count,
 									'data-tab' => $tab_count,
 									'role' => 'tab',
+									'onclick' => $onclick
 								] );
 
 								$this->add_inline_editing_attributes( $tab_content_setting_key, 'advanced' );
 						?>
-						<div <?php echo $this->get_render_attribute_string( $tab_title_mobile_setting_key ); ?>><?php echo $item['tab_title']; ?></div>
+						<div <?php echo $this->get_render_attribute_string( $tab_title_mobile_setting_key ); ?>><?php echo esc_html($item['tab_title']); ?></div>
 						<div <?php echo $this->get_render_attribute_string( $tab_content_setting_key ); ?>><?php
 							foreach ( $item['tab_display'] as $display )
 							{
@@ -574,7 +590,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 
 												foreach ( $photo_urls as $photo )
 												{
-													echo '<a href="' . $photo['url'] . '" data-fancybox="tabbed_photos" rel="nofollow"><img src="' . $photo['url'] . '" alt=""></a>';
+													echo '<a href="' . esc_url($photo['url']) . '" data-fancybox="tabbed_photos" rel="nofollow"><img src="' . esc_url($photo['url']) . '" alt=""></a>';
 												}
 
 												echo '</div>';
@@ -596,7 +612,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 													{
 														$image_medium_url = $image[0];
 													}
-													echo '<a href="' . wp_get_attachment_url($attachment_id) . '" data-fancybox="tabbed_photos" rel="nofollow"><img src="' . $image_medium_url . '" alt=""></a>';
+													echo '<a href="' . esc_url(wp_get_attachment_url($attachment_id)) . '" data-fancybox="tabbed_photos" rel="nofollow"><img src="' . esc_url($image_medium_url) . '" alt=""></a>';
 												}
 
 												echo '</div>';
@@ -617,7 +633,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 
 												foreach ( $floorplan_urls as $floorplan )
 												{
-													echo '<a href="' . $floorplan['url'] . '" data-fancybox="floorplans" rel="nofollow"><img src="' . $floorplan['url'] . '" alt=""></a>';
+													echo '<a href="' . esc_url($floorplan['url']) . '" data-fancybox="floorplans" rel="nofollow"><img src="' . esc_url($floorplan['url']) . '" alt=""></a>';
 												}
 
 												echo '</div>';
@@ -635,11 +651,11 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 													{
 														if ( wp_attachment_is_image($attachment_id) )
 									                    {
-															echo '<a href="' . wp_get_attachment_url($attachment_id) . '" data-fancybox="floorplans" rel="nofollow"><img src="' . wp_get_attachment_url($attachment_id) . '" alt=""></a>';
+															echo '<a href="' . esc_url(wp_get_attachment_url($attachment_id)) . '" data-fancybox="floorplans" rel="nofollow"><img src="' . esc_url(wp_get_attachment_url($attachment_id)) . '" alt=""></a>';
 														}
 														else
 														{
-															echo '<a href="' . wp_get_attachment_url($attachment_id) . '" target="_blank" rel="nofollow">' . __( 'View Floorplan', 'propertyhive' ) . '</a>';
+															echo '<a href="' . esc_url(wp_get_attachment_url($attachment_id)) . '" target="_blank" rel="nofollow">' . esc_html(__( 'View Floorplan', 'propertyhive' )) . '</a>';
 														}
 													}
 
@@ -661,7 +677,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 
 												foreach ( $brochure_urls as $brochure )
 												{
-													echo '<a href="' . $brochure['url']. '" target="_blank" rel="nofollow">' . __( 'View Brochure', 'propertyhive' ) . '</a>';
+													echo '<a href="' . esc_url($brochure['url']). '" target="_blank" rel="nofollow">' . esc_html(__( 'View Brochure', 'propertyhive' )) . '</a>';
 												}
 
 												echo '</div>';
@@ -679,11 +695,11 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 													{
 														if ( wp_attachment_is_image($attachment_id) )
 									                    {
-															echo '<a href="' . wp_get_attachment_url($attachment_id) . '" data-fancybox="brochures" rel="nofollow"><img src="' . wp_get_attachment_url($attachment_id) . '" alt=""></a>';
+															echo '<a href="' . esc_url(wp_get_attachment_url($attachment_id)) . '" data-fancybox="brochures" rel="nofollow"><img src="' . esc_url(wp_get_attachment_url($attachment_id)) . '" alt=""></a>';
 														}
 														else
 														{
-															echo '<a href="' . wp_get_attachment_url($attachment_id) . '" target="_blank" rel="nofollow">' . __( 'View Brochure', 'propertyhive' ) . '</a>';
+															echo '<a href="' . esc_url(wp_get_attachment_url($attachment_id)) . '" target="_blank" rel="nofollow">' . esc_html(__( 'View Brochure', 'propertyhive' )) . '</a>';
 														}
 													}
 
@@ -705,7 +721,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 
 												foreach ( $epc_urls as $epc )
 												{
-													echo '<a href="' . $epc['url'] . '" data-fancybox="epcs" rel="nofollow"><img src="' . $epc['url'] . '" alt=""></a>';
+													echo '<a href="' . esc_url($epc['url']) . '" data-fancybox="epcs" rel="nofollow"><img src="' . esc_url($epc['url']) . '" alt=""></a>';
 												}
 
 												echo '</div>';
@@ -723,11 +739,11 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 													{
 														if ( wp_attachment_is_image($attachment_id) )
 									                    {
-															echo '<a href="' . wp_get_attachment_url($attachment_id) . '" data-fancybox="epcs" rel="nofollow"><img src="' . wp_get_attachment_url($attachment_id) . '" alt=""></a>';
+															echo '<a href="' . esc_url(wp_get_attachment_url($attachment_id)) . '" data-fancybox="epcs" rel="nofollow"><img src="' . esc_url(wp_get_attachment_url($attachment_id)) . '" alt=""></a>';
 														}
 														else
 														{
-															echo '<a href="' . wp_get_attachment_url($attachment_id) . '" target="_blank" rel="nofollow">' . __( 'View EPC', 'propertyhive' ) . '</a>';
+															echo '<a href="' . esc_url(wp_get_attachment_url($attachment_id)) . '" target="_blank" rel="nofollow">' . esc_html(__( 'View EPC', 'propertyhive' )) . '</a>';
 														}
 													}
 
@@ -746,7 +762,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 
 											foreach ( $virtual_tours as $virtual_tour )
 											{
-												echo '<a href="' . $virtual_tour['url'] . '" target="_blank" rel="nofollow">' . $virtual_tour['label'] . '</a>';
+												echo '<a href="' . esc_url($virtual_tour['url']) . '" target="_blank" rel="nofollow">' . esc_html($virtual_tour['label']) . '</a>';
 											}
 
 											echo '</div>';
@@ -778,7 +794,7 @@ class Elementor_Property_Tabbed_Details_Widget extends \Elementor\Widget_Base {
 											    	);
 												}
 												
-												echo '<iframe src="' . $virtual_tour['url'] . '" height="500" width="100%" allowfullscreen frameborder="0" allow="fullscreen"></iframe>';
+												echo '<iframe src="' . esc_url($virtual_tour['url']) . '" height="500" width="100%" allowfullscreen frameborder="0" allow="fullscreen"></iframe>';
 											}
 
 											echo '</div>';

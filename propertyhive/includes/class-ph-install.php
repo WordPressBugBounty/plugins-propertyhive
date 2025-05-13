@@ -200,7 +200,7 @@ class PH_Install {
     {
         $schedules['every_fifteen_minutes'] = array(
             'interval'  => 900,
-            'display'   => __( 'Every 15 Minutes', 'textdomain' )
+            'display'   => __( 'Every 15 Minutes', 'propertyhive' )
         );
          
         return $schedules;
@@ -463,6 +463,12 @@ class PH_Install {
                 ),
                 array(
                     'name' => 'Leasehold'
+                ),
+                array(
+                    'name' => 'Share of Freehold'
+                ),
+                array(
+                    'name' => 'Commonhold'
                 )
             ),
             'commercial_tenure' => array(
@@ -471,6 +477,12 @@ class PH_Install {
                 ),
                 array(
                     'name' => 'Leasehold'
+                ),
+                array(
+                    'name' => 'Share of Freehold'
+                ),
+                array(
+                    'name' => 'Commonhold'
                 )
             ),
             'furnished' => array(

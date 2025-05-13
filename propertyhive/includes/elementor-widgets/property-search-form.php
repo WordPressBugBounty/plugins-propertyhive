@@ -161,7 +161,7 @@ class Elementor_Property_Search_Form_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'label_width',
 			[
-				'label' => esc_html__( 'Label Width', 'textdomain' ),
+				'label' => esc_html__( 'Label Width', 'propertyhive' ),
 				'type' => \Elementor\Controls_Manager::SELECT,
 				'default' => '',
 				'options' => [
@@ -238,7 +238,7 @@ class Elementor_Property_Search_Form_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'input_width',
 			[
-				'label' => esc_html__( 'Input Width', 'textdomain' ),
+				'label' => esc_html__( 'Input Width', 'propertyhive' ),
 				'type' => \Elementor\Controls_Manager::SELECT,
 				'default' => '',
 				'options' => [
@@ -375,7 +375,7 @@ class Elementor_Property_Search_Form_Widget extends \Elementor\Widget_Base {
 		if ( isset($settings['stack_controls_px']) && !empty($settings['stack_controls_px']) )
 		{
 			echo '<style type="text/css">
-				@media(max-width:' . $settings['stack_controls_px'] . 'px) {
+				@media(max-width:' . (int)$settings['stack_controls_px'] . 'px) {
 					.property-search-form { display:block }
 					.property-search-form .control { display:block; margin-bottom:8px; }
 					.property-search-form input[type=\'submit\'] { width:100%; }
@@ -383,7 +383,7 @@ class Elementor_Property_Search_Form_Widget extends \Elementor\Widget_Base {
 			</style>';
 		}
 
-		$original_department = isset($_GET['department']) ? $_GET['department'] : false;
+		$original_department = isset($_GET['department']) ? sanitize_text_field($_GET['department']) : false;
 		$changed_department = false;
 		if ( 
 			isset($settings['default_department']) && !empty($settings['default_department']) && 

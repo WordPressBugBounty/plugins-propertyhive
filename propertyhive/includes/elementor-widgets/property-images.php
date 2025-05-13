@@ -63,9 +63,9 @@ class Elementor_Property_Images_Widget extends \Elementor\Widget_Base {
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'default' => '',
 				'options' => [
-					'' => esc_html__( 'Image In Lightbox', 'textdomain' ),
-					'blank' => esc_html__( 'Image In New Window', 'textdomain' ),
-					'property'  => esc_html__( 'Property URL', 'textdomain' ),
+					'' => esc_html__( 'Image In Lightbox', 'propertyhive' ),
+					'blank' => esc_html__( 'Image In New Window', 'propertyhive' ),
+					'property'  => esc_html__( 'Property URL', 'propertyhive' ),
 				],
             ]
         );
@@ -139,15 +139,15 @@ class Elementor_Property_Images_Widget extends \Elementor\Widget_Base {
 
 	public function customise_property_images_html_blank( $html, $post_id )
 	{
-		$html = str_replace("data-fancybox=\"gallery-" . $post_id . "\"", "target=\"_blank\"", $html);
+		$html = str_replace("data-fancybox=\"gallery-" . (int)$post_id . "\"", "target=\"_blank\"", $html);
 		return $html;
 	}
 
 	public function customise_property_images_html_property( $html, $post_id )
 	{
-		$html = str_replace("data-fancybox=\"gallery-" . $post_id . "\"", "", $html);
+		$html = str_replace("data-fancybox=\"gallery-" . (int)$post_id . "\"", "", $html);
 
-		$html = preg_replace('/(href=")([^"]*)(")/', 'href="' . get_permalink($post_id) . '"', $html);
+		$html = preg_replace('/(href=")([^"]*)(")/', 'href="' . esc_url(get_permalink($post_id)) . '"', $html);
 
 		return $html;
 	}
