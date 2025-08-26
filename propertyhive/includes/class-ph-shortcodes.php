@@ -190,10 +190,14 @@ class PH_Shortcodes {
 
 		if ( isset($atts['department']) && in_array($atts['department'], array_keys( ph_get_departments() )) )
 		{
+			$departments = explode(",", $atts['department']);
+			$departments = array_map('trim', $departments);
+            $departments = array_filter($departments);
+
 			$meta_query[] = array(
 				'key' => '_department',
-				'value' => $atts['department'],
-				'compare' => '='
+				'value' => $departments,
+				'compare' => 'IN'
 			);
 		}
 
@@ -686,7 +690,7 @@ class PH_Shortcodes {
 
 		<?php else: ?>
 
-            <p class="propertyhive-info no-results-message"><?php echo $atts['no_results_output']; ?></p>
+            <p class="propertyhive-info no-results-message"><?php echo wp_kses_post($atts['no_results_output']); ?></p>
 
 		<?php endif;
 
@@ -724,6 +728,8 @@ class PH_Shortcodes {
 			'property_type_id'	=> '',
 			'sale_by_id'		=> '',
 			'location_id'		=> '',
+			'commercial_for_sale' => '',
+			'commercial_to_rent' => '',
 			'orderby' 		=> 'date',
 			'order' 		=> 'desc',
 			'no_results_output' => '',
@@ -762,10 +768,14 @@ class PH_Shortcodes {
 
 		if ( isset($atts['department']) && $atts['department'] != '' )
 		{
+			$departments = explode(",", $atts['department']);
+			$departments = array_map('trim', $departments);
+            $departments = array_filter($departments);
+
 			$meta_query[] = array(
 				'key' => '_department',
-				'value' => $atts['department'],
-				'compare' => '='
+				'value' => $departments,
+				'compare' => 'IN'
 			);
 		}
 
@@ -812,6 +822,24 @@ class PH_Shortcodes {
 				'value' => explode(",", $atts['negotiator_id']),
 				'compare' => 'IN',
 			);
+		}
+
+		if ( isset($atts['commercial_for_sale']) && $atts['commercial_for_sale'] != '' )
+		{
+			$meta_query[] = array(
+                'key'     => '_for_sale',
+                'value'   => 'yes',
+                'compare' => '=',
+            );
+		}
+
+		if ( isset($atts['commercial_to_rent']) && $atts['commercial_to_rent'] != '' )
+		{
+			$meta_query[] = array(
+                'key'     => '_to_rent',
+                'value'   => 'yes',
+                'compare' => '=',
+            );
 		}
 
 		$tax_query = array();
@@ -951,7 +979,7 @@ class PH_Shortcodes {
 
 		<?php else: ?>
 
-            <p class="propertyhive-info no-results-message"><?php echo $atts['no_results_output']; ?></p>
+            <p class="propertyhive-info no-results-message"><?php echo wp_kses_post($atts['no_results_output']); ?></p>
 
 		<?php endif;
 
@@ -1048,10 +1076,14 @@ class PH_Shortcodes {
 
 		if ( isset($atts['department']) && $atts['department'] != '' )
 		{
+			$departments = explode(",", $atts['department']);
+			$departments = array_map('trim', $departments);
+            $departments = array_filter($departments);
+
 			$meta_query[] = array(
 				'key' => '_department',
-				'value' => $atts['department'],
-				'compare' => '='
+				'value' => $departments,
+				'compare' => 'IN'
 			);
 		}
 
@@ -1227,7 +1259,7 @@ class PH_Shortcodes {
 
 		<?php else: ?>
 
-            <p class="propertyhive-info no-results-message"><?php echo $atts['no_results_output']; ?></p>
+            <p class="propertyhive-info no-results-message"><?php echo wp_kses_post($atts['no_results_output']); ?></p>
 
 		<?php endif;
 
@@ -1642,7 +1674,7 @@ class PH_Shortcodes {
 
 			<?php else: ?>
 
-            	<p class="propertyhive-info no-results-message"><?php echo $atts['no_results_output']; ?></p>
+            	<p class="propertyhive-info no-results-message"><?php echo wp_kses_post($atts['no_results_output']); ?></p>
 
 			<?php endif;
 
