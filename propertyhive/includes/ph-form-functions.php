@@ -306,6 +306,15 @@ function propertyhive_enquiry_form( $property_id = '' )
         'value' => ( $property_id != '' ? $property_id : $post->ID )
     );
 
+    $utm_fields = array( 'utm_source', 'utm_medium', 'utm_term', 'utm_content', 'utm_campaign', 'gclid', 'fbclid' );
+    foreach ( $utm_fields as $utm_field )
+    {
+        $form_controls[$utm_field] = array(
+            'type' => 'hidden',
+            'value' =>''
+        );
+    }
+
     if ( get_option( 'propertyhive_property_enquiry_form_disclaimer', '' ) != '' )
     {
         $disclaimer = get_option( 'propertyhive_property_enquiry_form_disclaimer', '' );
@@ -1400,6 +1409,13 @@ function ph_form_field( $key, $field )
 
             $output .= '<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
             <div class="h-captcha" data-sitekey="' . $field['site_key'] . '"></div>';
+            break;
+        }
+        case "turnstile":
+        {
+            $field['site_key'] = isset( $field['site_key'] ) ? $field['site_key'] : '';
+
+            $output .= '<div class="turnstile" data-sitekey="' . $field['site_key'] . '"></div>';
             break;
         }
         case "daterange":

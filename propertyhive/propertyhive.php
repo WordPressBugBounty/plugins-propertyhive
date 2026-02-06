@@ -3,11 +3,11 @@
  * Plugin Name: Property Hive
  * Plugin URI: https://wordpress.org/plugins/propertyhive/
  * Description: Property Hive has everything you need to build estate agency websites
- * Version: 2.1.9
+ * Version: 2.1.14
  * Author: PropertyHive
  * Author URI: https://wp-property-hive.com
  * Requires at least: 5.6
- * Tested up to: 6.8.2
+ * Tested up to: 6.8.3
  * 
  * Text Domain: propertyhive
  * Domain Path: /i18n/languages/
@@ -27,14 +27,14 @@ if ( ! class_exists( 'PropertyHive' ) )
     * Main PropertyHive Class
     *
     * @class PropertyHive
-    * @version 2.1.9
+    * @version 2.1.14
     */
     final class PropertyHive {
          
         /**
          * @var string
          */
-        public $version = '2.1.9';
+        public $version = '2.1.14';
          
         /**
          * @var PropertyHive The single instance of the class
@@ -304,6 +304,7 @@ if ( ! class_exists( 'PropertyHive' ) )
             include_once( 'includes/class-ph-salient.php' );                // Salient / WPBakery
             include_once( 'includes/class-ph-yoast-seo.php' );              // Yoast SEO
             include_once( 'includes/class-ph-rank-math.php' );              // Rank Math
+            include_once( 'includes/class-ph-aioseo.php' );                 // All In One SEO
             include_once( 'includes/class-ph-duplicate-post.php' );         // Duplicate Post
 
             include_once( 'includes/ph-pro-feature-functions.php' );        // Pro Features

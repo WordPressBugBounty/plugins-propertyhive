@@ -2,8 +2,8 @@
 Contributors: PropertyHive,BIOSTALL
 Tags: property, real estate, estate agents, property plugin, property import, propertyhive, property hive, properties, estate agent plugin, rightmove, zoopla, blm, rtdf, jupix, vebra, alto, expertagent, dezrez, expert agent, expertagent, reapit, reaxml, letmc, acquaint
 Requires at least: 5.6
-Tested up to: 6.8.2
-Stable tag: 2.1.9
+Tested up to: 6.8.3
+Stable tag: 2.1.14
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -38,7 +38,7 @@ Hey you. Are you looking to showcase and sell your properties? YOUR website is y
 * QR generator
 * White label
 * Elementor and Divi support
-* Yoast and Rank Math compatibility	
+* Yoast, AIOSEO and Rank Math compatibility	
 * Customisable templates
 * Property Hive CRM
 * International support for real estate agents worldwide
@@ -181,6 +181,39 @@ The free core plugin contains the foundations that you need to create a property
 16. Not using a CRM? Property Hive comes with a free CRM to manage applicants, email matching properties to them, record viewings and more
 
 == Changelog ==
+
+= 2.1.14 - 2025-12-01 =
+* Added support for Cloudflare Turnstile as a CAPTCHA service
+* Added new 'Furnished' Elementor widget
+* Updated geocoding requests to OSM to pass in User-Agent header to reduce chance of receiving a 403 response back
+
+= 2.1.13 - 2025-11-12 =
+* Created search page and assign to 'Search Results Page' setting by default upon installation. This is one of the main sticking points when using Property Hive for the first time.
+* Flagged the search results page as 'Property Search Results' in the list of pages so it's clear which is being used
+* Updated default maps provider to OpenStreetMaps upon installation. This ensures maps show by default and there is no warning shown to new users about missing Google API key
+* Security enhancement surrounding merging contacts
+* Security enhancement surrounding generating applicant lists
+
+= 2.1.12 - 2025-11-10 =
+* Added new 'Not On Market Message' Elementor widget to display a message when a property is viewed that's no longer on the market
+* Added the ability to add a custom tab to Elementor 'Tabbed Details' widget
+* Added Due Date filter to key date admin list
+* Updated enquiries created via REST API to take into account whether enquiries module is disabled and/or storing of enquiries is disabled in GDPR settings
+* Catered for custom departments when determining which custom fields to show in settings area
+* Corrected PHP8.2 warning about creation of dynamic property in Divi widgets
+* Declared compatibility for WordPress 6.8.3
+
+= 2.1.11 - 2025-10-14 =
+* Added Lead Tracking information to property enquiries. Records UTM/FB tags when a visitor lands on the page and records them against an enquiry
+* Added WordPress actions before and after search forms ('propertyhive_before_search_form' and 'propertyhive_after_search_form')
+* Added promo to features dashboard promoting AI Property Search whereby agents will be able to add natural language property search functionality (e.g. "I want a 3 bed house within 2 miles of Manchester"). Set to disappear when feature goes live
+* Corrected JS error when a search form existed with no department field
+
+= 2.1.10 - 2025-10-06 =
+* Added RealEstateListing schema support if using Yoast SEO
+* Added preliminary support for AIOSEO, including excluded off market properties from XML sitemaps and including RealEstateListing schema
+* Added commercial description title as CSS class when outputting formatted version so they can be targeted using CSS/JS
+* Added better support for commercial properties to REST API
 
 = 2.1.9 - 2025-09-25 =
 * Added 'blank_option' attribute to office form field so the default 'No Preference' option can be customised

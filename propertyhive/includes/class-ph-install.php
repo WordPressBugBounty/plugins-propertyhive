@@ -96,6 +96,7 @@ class PH_Install {
         if ( is_null( $current_version ) && is_null( $current_db_version ) ) 
         {
             $this->create_terms();
+            $this->create_pages();
             set_transient( '_ph_activation_redirect', 1, 30 );
         }
         
@@ -212,7 +213,7 @@ class PH_Install {
 	 * @access public
 	 * @return void
 	 */
-	public static function create_pages() {
+	public function create_pages() {
 
         // Create page object
         $my_post = array(
@@ -225,9 +226,12 @@ class PH_Install {
         );
         
         // Insert the post into the database
-        $page_id = wp_insert_post( $my_post );
+        $page_id = wp_insert_post( $my_post, true );
         
-        update_option( 'propertyhive_search_results_page_id', $page_id );
+        if ( !is_wp_error($page_id) )
+        {
+            update_option( 'propertyhive_search_results_page_id', $page_id );
+        }
 	}
 
 	/**
@@ -622,6 +626,9 @@ class PH_Install {
         add_option( 'propertyhive_active_departments_sales', 'yes', '', 'yes' );
         add_option( 'propertyhive_active_departments_lettings', 'yes', '',  'yes' );
         add_option( 'propertyhive_primary_department', 'residential-sales', '',  'yes' );
+
+        add_option( 'propertyhive_maps_provider', 'osm', '', 'no' );
+        add_option( 'propertyhive_geocoding_provider', 'osm', '', 'no' );
 
         add_option( 'propertyhive_default_country', 'GB', '', 'yes' );
         add_option( 'propertyhive_countries', array('GB'), '', 'yes' );
