@@ -136,6 +136,7 @@ class PH_AJAX {
 
             // Dismissing notices
             'dismiss_notice_leave_review' => false,
+            'dismiss_notice_retired_template_assistant' => false,
             'dismiss_notice_demo_data' => false,
             'dismiss_notice_epl' => false,
             'dismiss_notice_missing_search_results' => false,
@@ -273,6 +274,23 @@ class PH_AJAX {
     public function dismiss_notice_leave_review()
     {
         update_option( 'propertyhive_review_prompt_due_timestamp', 0 );
+        
+        // Quit out
+        die();
+    }
+
+    public function dismiss_notice_retired_template_assistant()
+    {
+        if ( is_multisite() ) 
+        {
+            if ( ! is_super_admin() ) return;
+            delete_site_option( 'propertyhive_template_assistant_retired_notice' );
+        }
+        else 
+        {
+            if ( ! current_user_can( 'activate_plugins' ) ) return;
+            delete_option( 'propertyhive_template_assistant_retired_notice' );
+        }
         
         // Quit out
         die();
@@ -3239,6 +3257,22 @@ class PH_AJAX {
         $lat = '';
         $lng = '';
         $error = '';
+
+        // Rate limit: 1 request/second
+        $rate_key = 'ph_osm_geo_last_ts';
+        $last_ts = (int)get_transient( $rate_key );
+        $now = time();
+
+        if ( $last_ts && ($now - $last_ts) < 1 ) 
+        {
+            // Too soon: tell client to retry shortly
+            $error = 'Too many geocoding requests. Please wait a second and try again.';
+            json_encode(array('error' => $error));
+            wp_die();
+        }
+
+        // Set timestamp immediately to prevent stampedes
+        set_transient( $rate_key, $now );
 
         $request_url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=" . strtolower(ph_clean($_POST['country'])) . "&addressdetails=1&q=" . urlencode(ph_clean($_POST['address']));
         
@@ -7953,12 +7987,38 @@ class PH_AJAX {
         if ( !is_dir(WP_PLUGIN_DIR . '/' . $slug) && strpos($feature['download_url'], 'wordpress.org') === false )
         {
             // not a public WP plugin. Must be hosted privately
-            $response = wp_remote_get(
-                $feature['download_url'],
-                array(
-                    'timeout' => 30
-                )
-            );
+            if ( !$pro )
+            {
+                // It's free, just let them have it
+                $response = wp_remote_get(
+                    $feature['download_url'],
+                    array(
+                        'timeout' => 60,
+                        'sslverify' => true,
+                    )
+                );
+            }
+            else
+            {
+                // Run through server check to ensure only the genuinely lovely humans get this Pro feature
+                $response = wp_remote_post(
+                    'https://wp-property-hive.com/activate-pro-feature.php',
+                    array(
+                        'timeout' => 60,
+                        'sslverify' => true,
+                        'headers' => array(
+                            'Content-Type'        => 'application/json',
+                            'X-PH-License-Key'    => get_option( 'propertyhive_pro_license_key', '' ),
+                            'X-PH-License-Type'   => PH()->license->get_license_type(),
+                            'X-PH-Instance-Id'   => get_option( 'propertyhive_pro_instance_id', '' ),
+                            'X-PH-Plugin-Version' => PH_VERSION,
+                        ),
+                        'body' => wp_json_encode(array(
+                            'wordpress_plugin_file' => $feature['wordpress_plugin_file'],
+                        )),
+                    )
+                );
+            }
 
             if ( is_wp_error( $response ) )
             {

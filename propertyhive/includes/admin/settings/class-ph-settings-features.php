@@ -83,7 +83,7 @@ class PH_Settings_Features extends PH_Settings_Page {
         echo '</div>';
 
         // Check if AI Property Search is in list. If not, it can't have been launched yet and to show promo instead
-        $ai_property_search_found = false;
+        /*$ai_property_search_found = false;
         foreach ( $features as $feature )
         {
             $slug = explode("/", $feature['wordpress_plugin_file']);
@@ -94,7 +94,7 @@ class PH_Settings_Features extends PH_Settings_Page {
                 $ai_property_search_found = true;
                 break;
             }
-        }
+        }*/
 
         // list of features
         echo '<div class="pro-features">';
@@ -102,7 +102,7 @@ class PH_Settings_Features extends PH_Settings_Page {
         $i = 0;
         foreach ( $features as $feature )
         {
-            if ( $i == 0 && $ai_property_search_found === false )
+            /*if ( $i == 0 && $ai_property_search_found === false )
             {
                 // Show ad
                 $feature_status = false;
@@ -142,10 +142,46 @@ class PH_Settings_Features extends PH_Settings_Page {
                 echo '</li>';
 
                 ++$i;
-            }
+            }*/
 
             $slug = explode("/", $feature['wordpress_plugin_file']);
             $slug = $slug[0];
+
+            if ( $slug == 'propertyhive-template-assistant' )
+            {
+                echo '<li style="visibility:hidden" class="';
+                if ( isset($feature['categories']) && is_array($feature['categories']) && !empty($feature['categories']) )
+                {
+                    echo esc_attr(implode(" ", $feature['categories']));
+                }
+
+                $pro = false;
+
+                echo '">
+                    <div class="inner"' . ( !$can_use ? ' style="border:1px solid #900"' : '' ) . '>
+                        <h3>' . ( ( isset($feature['dashicon']) && !empty($feature['dashicon']) ) ? '<span class="dashicons ' . esc_attr($feature['dashicon']) . '"></span> ' : '' ) . esc_html($feature['name']) . '</h3> 
+                        <span class="free"><span>FREE</span></span>
+                    ';
+
+                    $links = array();
+                    $links[] = 'This feature has moved. <a href="https://wp-property-hive.com/template-assistant-is-now-part-of-property-hive-core-plugin?src=plugin-feature-settings" target="_blank" style="text-decoration:none">' . esc_html(__( 'Read More', 'propertyhive' )) . '</a>';
+                    
+                    echo '<div style="float:right; padding-top:6px;">';
+                    echo implode("&nbsp;&nbsp;|&nbsp;&nbsp;", $links);
+                    echo '</div>';
+
+                    echo '<label class="switch">
+                      <input type="checkbox" name="" disabled value="">
+                      <span class="slider round" style="pointer-events:none; opacity:0.5"></span>
+                    </label>';
+
+                    echo '<div class="loading"><img src="' . esc_url(PH()->plugin_url() . '/assets/images/admin/loading.gif') . '" alt=""></div>';
+
+                    echo '</div>';
+                echo '</li>';
+
+                continue;
+            }
 
             $feature_status = false;
 

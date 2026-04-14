@@ -214,6 +214,12 @@ class PH_Countries {
 				'currency_symbol' => 'kr',
 				'currency_prefix' => false
 			),
+			'EG' => array(
+				'name' => 'Egypt',
+				'currency_code' => 'EGP',
+				'currency_symbol' => 'E&pound;',
+				'currency_prefix' => true
+			),
 			'FI' => array(
 				'name' => 'Finland',
 				'currency_code' => 'EUR',
@@ -512,16 +518,16 @@ class PH_Countries {
         }
         
 		$country = get_post_meta( $postID, '_address_country', true );
+		if ( $country == '' )
+		{
+			$country = get_option( 'propertyhive_default_country', 'GB' );
+		}
 
 		if (isset($countries[$country]))
 		{
 			if ( $department == 'residential-sales' )
 			{
 				$currency = get_post_meta( $postID, '_currency', true );
-				if ( $country == '' )
-				{
-					$country = get_option( 'propertyhive_default_country', 'GB' );
-				}
 				if ( $currency == '' )
 				{
 					$currency = $this->get_country($country);
@@ -537,10 +543,6 @@ class PH_Countries {
 			elseif ( $department == 'residential-lettings' )
 			{
 				$currency = get_post_meta( $postID, '_currency', true );
-				if ( $country == '' )
-				{
-					$country = get_option( 'propertyhive_default_country', 'GB' );
-				}
 				if ( $currency == '' )
 				{
 					$currency = $this->get_country($country);
@@ -586,10 +588,6 @@ class PH_Countries {
 				if ( get_post_meta( $postID, '_for_sale', true ) == 'yes' )
 				{
 					$currency = get_post_meta( $postID, '_commercial_price_currency', true );
-					if ( $country == '' )
-					{
-						$country = get_option( 'propertyhive_default_country', 'GB' );
-					}
 					if ( $currency == '' )
 					{
 						$currency = $this->get_country($country);
@@ -619,10 +617,6 @@ class PH_Countries {
 				if ( get_post_meta( $postID, '_to_rent', true ) == 'yes' )
 				{
 					$currency = get_post_meta( $postID, '_commercial_rent_currency', true );
-					if ( $country == '' )
-					{
-						$country = get_option( 'propertyhive_default_country', 'GB' );
-					}
 					if ( $currency == '' )
 					{
 						$currency = $this->get_country($country);
