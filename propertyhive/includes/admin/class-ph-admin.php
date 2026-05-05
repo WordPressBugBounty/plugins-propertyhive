@@ -25,7 +25,6 @@ class PH_Admin {
         add_action( 'current_screen', array( $this, 'remove_propertyhive_meta_boxes_from_screen_options' ) );
         add_action( 'admin_notices', array( $this, 'review_admin_notices') );
         add_action( 'admin_notices', array( $this, 'archive_admin_notices' ) );
-        //add_action( 'admin_notices', array( $this, 'retired_template_assistant_admin_notices' ) );
         add_action( 'admin_menu', array( $this, 'admin_dashboard_pages' ) );
         add_action( 'admin_head', array( $this, 'admin_head' ) );
         add_action( 'admin_init', array( $this, 'admin_redirects' ) );
@@ -51,9 +50,23 @@ class PH_Admin {
 
                 $count = intval($_GET['bulk_archived_posts']);
 
+                $message = sprintf(
+                    /* translators: 1: number of items, 2: post type label */
+                    _n(
+                        '%1$s %2$s moved to archive.',
+                        '%1$s %2$s moved to archive.',
+                        $count,
+                        'propertyhive'
+                    ),
+                    number_format_i18n( $count ),
+                    $count === 1
+                        ? $post_type_object->labels->singular_name
+                        : $post_type_object->labels->name
+                );
+
                 printf(
-                    '<div id="message" class="notice is-dismissible updated"><p>' . _n('%s ' . $post_type_object->labels->singular_name . ' moved to Archive.', '%s ' . $post_type_object->labels->name . ' moved to Archive.', $count, 'propertyhive') . '</p></div>',
-                    $count
+                    '<div id="message" class="notice is-dismissible updated"><p>%s</p></div>',
+                    $message
                 );
             }
         }
@@ -67,39 +80,26 @@ class PH_Admin {
 
                 $count = intval($_GET['bulk_unarchived_posts']);
 
+                $message = sprintf(
+                    /* translators: 1: number of items, 2: post type label */
+                    _n(
+                        '%1$s %2$s removed from archive.',
+                        '%1$s %2$s removed from archive.',
+                        $count,
+                        'propertyhive'
+                    ),
+                    number_format_i18n( $count ),
+                    $count === 1
+                        ? $post_type_object->labels->singular_name
+                        : $post_type_object->labels->name
+                );
+
                 printf(
-                    '<div id="message" class="notice is-dismissible updated"><p>' . _n('%s ' . $post_type_object->labels->singular_name . ' Removed from Archive.', '%s ' . $post_type_object->labels->name . ' removed from Archive.', $count, 'propertyhive') . '</p></div>',
-                    $count
+                    '<div id="message" class="notice is-dismissible updated"><p>%s</p></div>',
+                    $message
                 );
             }
         }
-    }
-
-    public function retired_template_assistant_admin_notices() 
-    {
-        if ( is_multisite() ) 
-        {
-            $show = (bool)get_site_option( 'propertyhive_template_assistant_retired_notice', 0 );
-            if ( !$show ) return;
-            if ( !is_super_admin() ) return;
-        }
-        else
-        {
-            $show = (bool)get_option( 'propertyhive_template_assistant_retired_notice', 0 );
-            if ( !$show ) return;
-            if ( !current_user_can( 'activate_plugins' ) ) return;
-        }
-
-        echo '<div class="notice notice-info is-dismissible"><p>
-            <strong>' . __('The Template Assistant add-on has been retired.', 'propertyhive' ) . '</strong><br>
-            ' . __('Its functionality is now built into Property Hive under \'Property Hive &gt; Settings &gt; Frontend\'.', 'propertyhive' ) . '<br>
-            ' . __('The add-on has been deactivated to prevent conflicts. No settings were lost.' ) . '
-        </p>
-        <p>
-            <a href="https://wp-property-hive.com/template-assistant-is-now-part-of-property-hive-core-plugin" target="_blank" class="button button-primary">' . __('Read more', 'propertyhive' ) . '</a>
-            <a href="" class="button" id="ph_dismiss_notice_retired_template_assistant">' . __('Dismiss this notice', 'propertyhive' ) . '</a>
-        </p>
-        </div>';
     }
 
     public function crm_only_mode_screen_id( $screen_ids )
@@ -585,7 +585,7 @@ class PH_Admin {
 
         // Classes
         include_once( 'class-ph-admin-post-types.php' );
-        //include_once( 'class-ph-admin-taxonomies.php' );
+        include_once( dirname(PH_PLUGIN_FILE) . '/includes/class-ph-ai-service.php' );
 
         // Classes we only need if the ajax is not-ajax
         if ( ! is_ajax() ) {
@@ -744,6 +744,7 @@ class PH_Admin {
 
             if ( 
                 get_option('propertyhive_maps_provider') !== 'osm' &&
+                get_option('propertyhive_maps_provider') !== 'mapbox' &&
                 get_option('propertyhive_google_maps_api_key', '') == '' && 
                 !isset($_POST['propertyhive_google_maps_api_key']) &&
                 (
@@ -758,7 +759,11 @@ class PH_Admin {
             {
                 echo "<div class=\"notice notice-info\" id=\"ph_notice_missing_google_maps_api_key\">
                         <p>
-                            " . sprintf( __( 'We noticed that you haven\'t entered a Google Maps API key yet. If wishing to display a map on your website it\'s recommended that you <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">create one</a> and <a href="%s">enter it</a>.', 'propertyhive' ), admin_url('admin.php?page=ph-settings&tab=general&section=map') ) . "
+                            " . sprintf( 
+                                    /* translators: %s: URL to plugin settings page where the Google Maps API key can be entered */
+                                    __( 'We noticed that you haven\'t entered a Google Maps API key. If wishing to display a map on your website it\'s recommended that you <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">create one</a> and <a href="%s">enter it</a>.', 'propertyhive' ), 
+                                    admin_url('admin.php?page=ph-settings&tab=general&section=map') 
+                                ) . "
                         </p>
                         <p>
                             <a href=\"". esc_url(admin_url('admin.php?page=ph-settings&tab=general&section=map')) . "\" class=\"button-primary\">" . esc_html(__( 'Enter Google Maps API Key', 'propertyhive' )) . "</a>

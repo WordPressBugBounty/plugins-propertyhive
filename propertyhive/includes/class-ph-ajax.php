@@ -2159,7 +2159,7 @@ class PH_AJAX {
 
         if ( ! isset( $_POST['property_id'] ) || ( isset( $_POST['property_id'] ) && empty( $_POST['property_id'] ) ) )
         {
-            $errors[] = __( 'Property ID is a required field and must be supplied when making an enquiry', 'propertyhive' ) . ': ' . $key;
+            $errors[] = __( 'Property ID is a required field and must be supplied when making an enquiry', 'propertyhive' );
         }
         else
         {
@@ -2279,7 +2279,52 @@ class PH_AJAX {
         {
             $errors[] = __( 'Missing required field', 'propertyhive' ) . ': disclaimer';
         }
-        
+
+        // Check only expected fields are received
+        /*$allowed_keys = array_keys($form_controls);
+        $allowed_keys[] = 'action';
+        $allowed_keys[] = 'utm_source';
+        $allowed_keys[] = 'utm_medium';
+        $allowed_keys[] = 'utm_term';
+        $allowed_keys[] = 'utm_content';
+        $allowed_keys[] = 'utm_campaign';
+        $allowed_keys[] = 'gclid';
+        $allowed_keys[] = 'fbclid';
+        $allowed_keys[] = 'property_id';
+        $allowed_keys[] = 'disclaimer';
+        $allowed_keys[] = 'g-recaptcha-response';
+        $allowed_keys[] = 'h-captcha-response';
+        $allowed_keys[] = 'cf-turnstile-response';
+
+        $allowed_keys = apply_filters(
+            'propertyhive_property_enquiry_allowed_keys',
+            $allowed_keys
+        );
+
+        foreach ( $_POST as $key => $value )
+        {
+            if ( !in_array($key, $allowed_keys) )
+            {
+                // Unexpected field
+                $errors[] = sprintf(
+                    esc_html__( 'Unexpected field %s received', 'propertyhive' ),
+                    esc_html( $key )
+                );
+                break;
+            }
+        }*/
+
+        // Passed validation
+        $property_ids = array_filter( array_map( 'absint', explode( '|', sanitize_text_field( wp_unslash( $_POST['property_id'] ) ) ) ) );
+        foreach ( $property_ids as $property_id ) 
+        {
+            if ( get_post_type($property_id) !== 'property' ) 
+            {
+                $errors[] = __( 'Invalid property supplied', 'propertyhive' );
+                break;
+            }
+        }
+
         if ( !empty($errors) )
         {
             // Failed validation
@@ -2290,9 +2335,6 @@ class PH_AJAX {
         }
         else
         {
-            // Passed validation
-            $property_ids = explode("|", ph_clean($_POST['property_id']));
-            
             // Get recipient email address
             $to = '';
             
@@ -2416,17 +2458,31 @@ class PH_AJAX {
             }
 
             $headers = array();
-            if ( isset($_POST['name']) && ! empty($_POST['name']) )
+            $name = isset( $_POST['name'] )
+                ? sanitize_text_field( wp_unslash( $_POST['name'] ) )
+                : '';
+
+            $name = str_replace( array( "\r", "\n" ), '', $name );
+
+            $from_email_address = sanitize_email( $from_email_address );
+
+            if ( $name !== '' ) 
             {
-                $headers[] = 'From: ' . html_entity_decode(ph_clean( $_POST['name'] )) . ' <' . sanitize_email( $from_email_address ) . '>';
+                $headers[] = sprintf( 'From: %s <%s>', $name, $from_email_address );
             }
             else
             {
-                $headers[] = 'From: <' . sanitize_email( $from_email_address ) . '>';
+                $headers[] = sprintf( 'From: <%s>', $from_email_address );
             }
-            if ( isset($_POST['email_address']) && sanitize_email( $_POST['email_address'] ) != '' )
+
+            if ( isset($_POST['email_address']) ) 
             {
-                $headers[] = 'Reply-To: ' . sanitize_email( $_POST['email_address'] );
+                $reply_to = sanitize_email(wp_unslash($_POST['email_address']));
+
+                if ( is_email($reply_to) ) 
+                {
+                    $headers[] = 'Reply-To: ' . $reply_to;
+                }
             }
 
             $to = apply_filters( 'propertyhive_property_enquiry_to', $to, $property_ids );
@@ -2465,7 +2521,7 @@ class PH_AJAX {
                     }
                     if ( isset($_POST['name']) && ! empty($_POST['name']) )
                     {
-                        $title .= __( ' from ', 'propertyhive' ) . ph_clean($_POST['name']);
+                        $title .= __( ' from ', 'propertyhive' ) . ph_clean(wp_unslash($_POST['name']));
                     }
                     
                     $enquiry_post = array(
@@ -2496,7 +2552,7 @@ class PH_AJAX {
                         }
                         else
                         {
-                            add_post_meta( $enquiry_post_id, $key, sanitize_textarea_field($value) );
+                            add_post_meta( $enquiry_post_id, $key, sanitize_textarea_field(wp_unslash($value)) );
                         }
                     }
                 }
