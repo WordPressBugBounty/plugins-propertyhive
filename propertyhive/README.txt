@@ -2,8 +2,8 @@
 Contributors: PropertyHive,BIOSTALL
 Tags: property, real estate, estate agents, property plugin, property import, propertyhive, property hive, properties, estate agent plugin, rightmove, zoopla, blm, rtdf, jupix, vebra, alto, expertagent, dezrez, expert agent, expertagent, reapit, reaxml, letmc, acquaint
 Requires at least: 5.6
-Tested up to: 6.9
-Stable tag: 2.2.3
+Tested up to: 7.0
+Stable tag: 2.2.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -182,12 +182,18 @@ The free core plugin contains the foundations that you need to create a property
 
 == Changelog ==
 
+= 2.2.4 - 2026-06-11 =
+* Added flag setting back in to Elementor Image widget lost during Template Assistant merger
+* Corrected label text in Avada brochures shortcode and add default value
+* Corrected security vulnerability in search form slider control
+* Declared compatibility for WordPress 7.0
+
 = 2.2.3 - 2026-05-05 =
 * Added hover options to Elementor Enquiry Form Link widget
 * Added new AI Service class for upcoming AI functionality
 * Updated string output for easier translation including translator comments
 * Updated validation and sanitisation around property enquiries
-* Updated commercial floor and site area so it's case to float before being output
+* Updated commercial floor and site area so it's cast to float before being output
 * Corrected issue with missing Google API key warning if provider is Mapbox
 * Corrected Back To Search Elementor widget colour not taking effect
 
